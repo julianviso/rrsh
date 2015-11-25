@@ -5,7 +5,7 @@ INCLUDES = -I.
 LIBS = -lpthread -ldl
 SRCS = echoserveri.c csapp.c echo.c
 OBJS = echoserveri.o csapp.o echo.o
-EXE = rrshClient
+EXE = rrshServer
 
 all:	$(EXE)
 
