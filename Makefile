@@ -3,9 +3,9 @@ CC = gcc
 CFLAGS = -Wall -g
 INCLUDES = -I.
 LIBS = -lpthread -ldl
-SRCS = upsh.c csapp.c p3extra.c
-OBJS = upsh.o csapp.o p3extra.o
-EXE = upsh
+SRCS = echoclient.c csapp.c
+OBJS = echoclient.o csapp.o 
+EXE = rrshClient
 
 all:	$(EXE)
 
