@@ -67,6 +67,7 @@ void echo(int connfd)
         if (strcmp(oneword,argv[0])==0)
         {
 	     allowed = 1;
+		
         }
 
    } while (c != EOF);
