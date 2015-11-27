@@ -10,6 +10,7 @@ int main(int argc, char **argv)
     char *host, buf[MAXLINE];
     rio_t rio;
     char buf2[MAXLINE];
+    char buf3[MAXLINE];
     if (argc != 3) {
 	fprintf(stderr, "usage: %s <host> <port>\n", argv[0]);
 	exit(0);
@@ -42,10 +43,16 @@ int main(int argc, char **argv)
 	{
 	printf("YESSS\n");
 	}*/
-    while (Fgets(buf, MAXLINE, stdin) != NULL) {
-	Rio_writen(clientfd, buf, strlen(buf));
-	Rio_readlineb(&rio, buf, MAXLINE);
-	Fputs(buf, stdout);
+	int n;
+    while (Fgets(buf3, MAXLINE, stdin) != NULL) {
+	Rio_writen(clientfd, buf3, strlen(buf3));
+       while ((n = Rio_readlineb(&rio, buf3, MAXLINE))!=0)
+	{
+//	 printf("loop\n");
+	 Fputs(buf3, stdout);
+	}
+	//Rio_readlineb(&rio, buf, MAXLINE);
+	//Fputs(buf, stdout);
     }
     Close(clientfd); //line:netp:echoclient:close
     exit(0);
