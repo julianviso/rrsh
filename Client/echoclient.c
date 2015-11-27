@@ -17,6 +17,14 @@ int main(int argc, char **argv)
     host = argv[1];
     port = atoi(argv[2]);
 
+	char username[40];
+	char password[40];
+  	printf ("Enter username: ");
+  	scanf ("%s", username);
+	printf ("Enter password: ");
+        scanf ("%s", password);
+  	//printf ("You entered: %s%s\n", username, password);
+
     clientfd = Open_clientfd(host, port);
     Rio_readinitb(&rio, clientfd);
     int auth = 0;
