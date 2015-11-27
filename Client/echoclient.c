@@ -42,12 +42,19 @@ int main(int argc, char **argv)
 	{
 	printf("YESSS\n");
 	}*/
+while(1){
+	printf("rrsh > ");
     while (Fgets(buf, MAXLINE, stdin) != NULL) {
 	Rio_writen(clientfd, buf, strlen(buf));
 	Rio_readlineb(&rio, buf, MAXLINE);
 	Fputs(buf, stdout);
+	printf("rrshs > ");
+    if (strcmp("quit\n", buf)==0){ /* quit command */
+	exit(0);
+    }
     }
     Close(clientfd); //line:netp:echoclient:close
     exit(0);
+}
 }
 /* $end echoclientmain */
