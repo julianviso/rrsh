@@ -17,13 +17,6 @@ int main(int argc, char **argv)
     host = argv[1];
     port = atoi(argv[2]);
 
-	char username[40];
-	char password[40];
-  	printf ("Enter username: ");
-  	scanf ("%s", username);
-	printf ("Enter password: ");
-        scanf ("%s", password);
-  	//printf ("You entered: %s%s\n", username, password);
 
     clientfd = Open_clientfd(host, port);
     Rio_readinitb(&rio, clientfd);
@@ -39,7 +32,12 @@ int main(int argc, char **argv)
 	Rio_writen(clientfd, buf2, strlen(buf2));
 //	Fputs(buf, stdout);
 	Rio_readlineb(&rio, buf2, MAXLINE);
+	
     	Fputs(buf2, stdout);
+	if (strcmp("Login Failed\n",buf2)==0)
+	{
+		exit(0);
+	}
 /*	if (strcmp("Yes\n",buf2)==0)
 	{
 	printf("YESSS\n");
