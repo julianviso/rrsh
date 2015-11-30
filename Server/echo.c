@@ -32,6 +32,7 @@ void echo(int connfd)
 	}
 	else
 	{
+		printf("User %s successfully logged in.\n", buf);
 		Rio_writen(connfd,"Login Approved\n",15);
 	}
 
@@ -47,6 +48,7 @@ int allowed = 0;
 int bg = parseline(buf3, argv);
 fp1 = fopen("rrshcommands.txt","r");
 if (argv[0] != NULL) {
+	printf("User %s sent the command '%s' to be executed.\n", buf, buf3);
    do {
 	//printf("%s",argv[0]);
       c = fscanf(fp1,"%s",oneword); /* got one word from the file */
@@ -61,23 +63,28 @@ if (argv[0] != NULL) {
 	fclose(fp1);
         if (allowed == 0)
         {
-                Rio_writen(connfd,"Cannot execute program on this server\n",38);
+		printf("The command '%s' is not allowed.\n", buf3);
+//                    dup2(connfd, 1);
+                    printf("Cannot execute ’%s’ on this server\n", buf3);
+                Rio_writen(connfd,"Cannot execute program on this server\n",strlen("Cannot execute program on this server\n"));
         }
 	else
 	{
 		int status;
                 pid_t pid;
-  if((pid = fork()) == 0) {
+  if((pid = fork()) == 0) 
+	{
+	printf("Forking/Execing the command ’%s’ on behalf of %s.\n", buf3, buf);	
     dup2 (connfd, 1);
     Close(connfd);
 	printf("%s",argv[0]);
 	 if (execve(argv[0], argv, environ) < 0) {
 		printf("%s: Command not found.\n", argv[0]);
-		exit(0);
+	//	exit(0);
 	    }  
   } else {
   }
-	printf("%s sdfsdf\n",argv[1]);
+//	printf("%s sdfsdf\n",argv[1]);
 	waitpid(pid, &status, 0);
             Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
 	

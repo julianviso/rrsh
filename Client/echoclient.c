@@ -37,15 +37,15 @@ int main(int argc, char **argv)
 	{
 		exit(0);
 	}
-	printf("rrsh > ");
+//printf("rrsh > ");
     while (Fgets(buf3, MAXLINE, stdin) != NULL) {
 	Rio_writen(clientfd, buf3, strlen(buf3));
 	Rio_readlineb(&rio, buf3, MAXLINE);
 	Fputs(buf3, stdout);
-	printf("rrsh > " );
+	//printf("rrsh > " );
 	if ((strcmp("Cannot execute program on this server\n",buf3) == 0))
 	{
-	  Fputs(buf3, stdout);
+//	  Fputs(buf3, stdout);
 	}
 	else
 	{
@@ -59,7 +59,7 @@ int main(int argc, char **argv)
 	 }
 	}
 	}
-	Fputs(buf3, stdout);
+//	Fputs(buf3, stdout);
     }
     Close(clientfd); //line:netp:echoclient:close
     exit(0);
