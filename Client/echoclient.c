@@ -39,20 +39,24 @@ int main(int argc, char **argv)
 	{
 		exit(0);
 	}
-/*	if (strcmp("Yes\n",buf2)==0)
+/*i	if (strcmp("Yes\n",buf2)==0)
 	{
 	printf("YESSS\n");
 	}*/
-	int n;
+//	int n;
     while (Fgets(buf3, MAXLINE, stdin) != NULL) {
 	Rio_writen(clientfd, buf3, strlen(buf3));
-       while ((n = Rio_readlineb(&rio, buf3, MAXLINE))!=0)
+//	Rio_readlineb(&rio, buf3, MAXLINE);
+	while ((Rio_readlineb(&rio, buf3, MAXLINE))!=0)
 	{
-//	 printf("loop\n");
+	 
 	 Fputs(buf3, stdout);
+	 if (strcmp("RRSH COMMAND COMPLETED\n",buf3) ==0)
+	 {
+		break;
+	 }
 	}
-	//Rio_readlineb(&rio, buf, MAXLINE);
-	//Fputs(buf, stdout);
+	Fputs(buf3, stdout);
     }
     Close(clientfd); //line:netp:echoclient:close
     exit(0);
