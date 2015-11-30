@@ -1,3 +1,4 @@
+
 /*
  * echo - read and echo text lines until client closes connection
  */
@@ -7,6 +8,7 @@
 #define MAXARGS   128
 extern char **environ;
 int parseline(char *buf, char **argv);
+int authUser(char * buf, char * buf2);
 void echo(int connfd) 
 {
     size_t n;
@@ -22,10 +24,25 @@ void echo(int connfd)
 	Rio_readlineb(&rio, buf, MAXLINE);
 	Rio_writen(connfd,"Yes\n",4);
 	Rio_readlineb(&rio, buf2, MAXLINE);
-        fp1 = fopen("rrshusers.txt","r");
-	int auth = 0;
-   do {
-      c = fscanf(fp1,"%s",oneword); /* got one word from the file */
+        //fp1 = fopen("rrshusers.txt","r");
+	int auth = authUser(buf,buf2);
+	if (auth == 0 )
+	{
+		Rio_writen(connfd,"Login Failed\n",13);
+	}
+	else
+	{
+		Rio_writen(connfd,"Login Approved\n",15);
+	}
+   /*do {
+      c = fscanf(fp1,"%s",oneword);  got one word from the file 
+v
+v
+r:26
+
+r
+
+r
 	if (strcmp(oneword,strtok(buf,"\n"))==0)
 	{	
 		c = fscanf(fp1,"%s",oneword);
@@ -40,12 +57,12 @@ void echo(int connfd)
 		}
 	}
    } while (c != EOF);   
-           /* repeat until EOF           */
+           
 	if (auth == 0)
 	{
 		Rio_writen(connfd,"Login Failed\n",13);	
 	}
-    fclose(fp1);
+    fclose(fp1);*/
 
 
 
@@ -143,4 +160,36 @@ int parseline(char *buf, char **argv)
     return bg;
 }
 /* $end parseline */
+int authUser(char * buf, char * buf2)
+{
+ FILE *fp1;
+    char oneword[100];
+    char c;
+ fp1 = fopen("rrshusers.txt","r");
+        int auth = 0;
+   do {
+      c = fscanf(fp1,"%s",oneword); /* got one word from the file */
+        if (strcmp(oneword,strtok(buf,"\n"))==0)
+        {
+                c = fscanf(fp1,"%s",oneword);
+                if (strcmp(oneword,strtok(buf2,"\n"))==0)
+                {
+                //   Rio_writen(connfd,"Login Approved\n",15);
+                   auth = 1;
+                }
+                else
+                {
+                //  Rio_writen(connfd,"Login Failed\n",13);
+                }
+        }
+   } while (c != EOF);
+           /* repeat until EOF           */
+        if (auth == 0)
+        {
+               // Rio_writen(connfd,"Login Failed\n",13);
+        }
+    fclose(fp1);
 
+
+return auth;
+} 
