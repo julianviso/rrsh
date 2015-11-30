@@ -6,26 +6,15 @@
 #define MAX_USR_PASS 42
 #define MAXARGS   128
 extern char **environ;
-#define die(e) do { fprintf(stderr, "%s\n", e); exit(EXIT_FAILURE); } while (0);
 int parseline(char *buf, char **argv);
-void run_commands(char *username, rio_t rio, int connfd);
 void echo(int connfd) 
 {
     size_t n;
-    size_t a;
     char buf[MAXLINE];
     char buf2[MAXLINE];
     char buf3[MAXLINE];
     rio_t rio;
-    rio_t rio2;
-    //pid_it pid;
     Rio_readinitb(&rio, connfd);
-  //  char username[MAX_USR_PASS];
-//    Rio_readlineb(&rio, username, MAX_USR_PASS);
-   // Rio_writen(connfd, "Login Approved\n", strlen("Login Approved\n"));
-   // Rio_readlineb(&rio, username, MAX_USR_PASS);
-   // Rio_writen(connfd, "Login Approved\n", strlen("Login Approved\n"));
-   // run_commands("aasd", rio, connfd);
     char *argv[128]; /* Argument list execve() */
     FILE *fp1;
     char oneword[100];
@@ -33,12 +22,10 @@ void echo(int connfd)
 	Rio_readlineb(&rio, buf, MAXLINE);
 	Rio_writen(connfd,"Yes\n",4);
 	Rio_readlineb(&rio, buf2, MAXLINE);
-      //  Rio_writen(connfd,"Yes\n",4);
         fp1 = fopen("rrshusers.txt","r");
 	int auth = 0;
    do {
       c = fscanf(fp1,"%s",oneword); /* got one word from the file */
-     // printf("%s\n",oneword);       /* display it on the monitor  */
 	if (strcmp(oneword,strtok(buf,"\n"))==0)
 	{	
 		c = fscanf(fp1,"%s",oneword);
@@ -54,12 +41,16 @@ void echo(int connfd)
 	}
    } while (c != EOF);   
            /* repeat until EOF           */
-	printf("asdasd\n");
 	if (auth == 0)
 	{
 		Rio_writen(connfd,"Login Failed\n",13);	
 	}
     fclose(fp1);
+
+
+
+
+
 
 
     while((n = Rio_readlineb(&rio, buf3, MAXLINE)) != 0) { //line:netp:echo:eof
@@ -153,57 +144,3 @@ int parseline(char *buf, char **argv)
 }
 /* $end parseline */
 
-void run_commands(char *username, rio_t rio, int connfd) {
-
-    FILE *fp;
-    char *argv[MAXARGS];
-    char buf[MAXLINE];
-    size_t valid = 0;
-    pid_t pid;
-    int status; 
-    char f_cmd[MAXLINE];
-
-    fp = fopen("rrshcommands.txt", "r");
-    // Read a line from the client
-    while (Rio_readlineb(&rio, buf, MAXLINE) > 0) {
-	printf("%s",buf);                
-        // Remove the new line character transferred over the network
-//        buf[strlen(buf)-2] = '\0';
-        // Parse the command line
-        parseline(buf,argv);
-
-        if (argv != NULL) { 
-            printf("User %s sent the command '%s' to be executed.\n", username, buf);
-            // Open the file and determine if the input is a valid command
-            while (fgets(&f_cmd[0], MAXLINE, fp) != NULL && !valid) {
-                f_cmd[strlen(f_cmd)-1] = '\0';
-                if (strncmp(argv[0], f_cmd, MAXLINE) == 0)
-                    valid = 1;
-            }
-            // Fork a child and dup the output to the client
-            if ((pid = fork()) == 0) {   /* Child runs user job */
-                // If its a valid command, log and display output to client
-                if (valid) {
-                    printf("Forking/Execing the command ’%s’ on behalf of %s.\n", buf, username);
-                    dup2(connfd, 1);
-                    if (execve(argv[0], argv, environ) < 0) 
-                        exit(0);
-                }
-                // If it is not, log and display error to the client
-                else {
-                    printf("The command '%s' is not allowed.\n", buf);
-                    dup2(connfd, 1);
-                    printf("Cannot execute ’%s’ on this server\n", buf);
-                    exit(0); 
-                }
-            }
-            // Wait for the child process to complete; Output finished command
-            waitpid(pid, &status, 0);
-            Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));            
-            // Start back at the top of the file 
-            rewind(fp);
-            valid = 0;
-        }
-    }
-    close(fp);
-}
