@@ -37,8 +37,13 @@ int main(int argc, char **argv)
 	{
 		exit(0);
 	}
-//printf("rrsh > ");
+printf("rrsh > ");
     while (Fgets(buf3, MAXLINE, stdin) != NULL) {
+	if ((strcmp("quit\n",buf3) == 0))
+        {
+	  exit(0);
+//        Fputs(buf3, stdout);
+        }
 	Rio_writen(clientfd, buf3, strlen(buf3));
 	Rio_readlineb(&rio, buf3, MAXLINE);
 	Fputs(buf3, stdout);
@@ -59,6 +64,7 @@ int main(int argc, char **argv)
 	 }
 	}
 	}
+	printf("rrsh > ");
 //	Fputs(buf3, stdout);
     }
     Close(clientfd); //line:netp:echoclient:close
