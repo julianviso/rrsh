@@ -9,7 +9,7 @@
 extern char **environ;
 int parseline(char *buf, char **argv);
 int authUser(char * buf, char * buf2);
-void echo(int connfd) 
+void echo(int connfd,unsigned short client_port,char * haddrp) 
 {
     size_t n;
     char buf[MAXLINE];
@@ -25,9 +25,11 @@ void echo(int connfd)
 	Rio_writen(connfd,"Yes\n",4);
 	Rio_readlineb(&rio, buf2, MAXLINE);
         //fp1 = fopen("rrshusers.txt","r");
+	printf("User %s logging in from %s at TCP port %u.\n", buf, haddrp, client_port);
 	int auth = authUser(buf,buf2);
 	if (auth == 0 )
 	{
+		printf("user %s denied access\n",buf);
 		Rio_writen(connfd,"Login Failed\n",13);
 	}
 	else
@@ -92,6 +94,7 @@ if (argv[0] != NULL) {
 
 	
 }
+printf("User %s disconnected\n",buf);
 }
 /* $end echo */
 

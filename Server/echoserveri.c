@@ -4,7 +4,7 @@
 /* $begin echoserverimain */
 #include "csapp.h"
 
-void echo(int connfd);
+void echo(int connfd,unsigned short client_port,char * haddrp);
 
 int main(int argc, char **argv) 
 {
@@ -29,8 +29,10 @@ int main(int argc, char **argv)
 			   sizeof(clientaddr.sin_addr.s_addr), AF_INET);
 	haddrp = inet_ntoa(clientaddr.sin_addr);
 	printf("server connected to %s (%s)\n", hp->h_name, haddrp);
-
-	echo(connfd);
+	// Get the client port and ip address
+	char * haddrp = inet_ntoa(clientaddr.sin_addr);
+	int client_port = ntohs(clientaddr.sin_port); 
+	echo(connfd,client_port,haddrp);
 	Close(connfd);
     }
     exit(0);
