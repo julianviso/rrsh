@@ -41,6 +41,7 @@ int main(int argc, char **argv)
     while (Fgets(buf3, MAXLINE, stdin) != NULL) {
 	Rio_writen(clientfd, buf3, strlen(buf3));
 	Rio_readlineb(&rio, buf3, MAXLINE);
+	Fputs(buf3, stdout);
 	printf("rrsh > " );
 	if ((strcmp("Cannot execute program on this server\n",buf3) == 0))
 	{

@@ -34,35 +34,6 @@ void echo(int connfd)
 	{
 		Rio_writen(connfd,"Login Approved\n",15);
 	}
-   /*do {
-      c = fscanf(fp1,"%s",oneword);  got one word from the file 
-v
-v
-r:26
-
-r
-
-r
-	if (strcmp(oneword,strtok(buf,"\n"))==0)
-	{	
-		c = fscanf(fp1,"%s",oneword);
-		if (strcmp(oneword,strtok(buf2,"\n"))==0)
-		{
-		   Rio_writen(connfd,"Login Approved\n",15);
-		   auth = 1;
-		}
-		else
-		{	
-		  Rio_writen(connfd,"Login Failed\n",13);
-		}
-	}
-   } while (c != EOF);   
-           
-	if (auth == 0)
-	{
-		Rio_writen(connfd,"Login Failed\n",13);	
-	}
-    fclose(fp1);*/
 
 
 
@@ -72,24 +43,21 @@ r
 
     while((n = Rio_readlineb(&rio, buf3, MAXLINE)) != 0) { //line:netp:echo:eof
 	printf("server received %d bytes\n", (int)n);
-	// int bg = parseline(buf3, argv);
-	 if (strcmp("/bin/ls -l\n",buf3) ==0 )
-	 {
-	   int bg = parseline(buf3, argv);
-	    fp1 = fopen("rrshcommands.txt","r");
-        int allowed = 0;
+int allowed = 0;
+int bg = parseline(buf3, argv);
+fp1 = fopen("rrshcommands.txt","r");
+if (argv[0] != NULL) {
    do {
+	//printf("%s",argv[0]);
       c = fscanf(fp1,"%s",oneword); /* got one word from the file */
-//      printf("%s\n",oneword);       /* display it on the monitor  */
         if (strcmp(oneword,argv[0])==0)
         {
 	     allowed = 1;
 		
         }
-
    } while (c != EOF);
-           /* repeat until EOF           */
-        printf("%d\n",allowed);
+	}
+        //printf("%d\n",allowed);
 	fclose(fp1);
         if (allowed == 0)
         {
@@ -99,31 +67,22 @@ r
 	{
 		int status;
                 pid_t pid;
-//		waitpid(pid, &status, 0);
-  //          Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
   if((pid = fork()) == 0) {
     dup2 (connfd, 1);
     Close(connfd);
-//  char *argv[] = { "/bin/cat", "abc.c" , 0 };
+	printf("%s",argv[0]);
 	 if (execve(argv[0], argv, environ) < 0) {
 		printf("%s: Command not found.\n", argv[0]);
 		exit(0);
 	    }  
-// waitpid(pid, &status, 0);
-  //          Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));  
   } else {
   }
-
+	printf("%s sdfsdf\n",argv[1]);
 	waitpid(pid, &status, 0);
             Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
+	
+}
 
-}
-}
-	else
-	{
-		printf("Cannot exec\n");
-		Rio_writen(connfd,"Cannot execute program on this server\n",38);	
-	}
 	
 }
 }
