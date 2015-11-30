@@ -47,7 +47,7 @@ void echo(int connfd,unsigned short client_port,char * haddrp)
     while((n = Rio_readlineb(&rio, buf3, MAXLINE)) != 0) { //line:netp:echo:eof
 	printf("server received %d bytes\n", (int)n);
 int allowed = 0;
-int bg = parseline(buf3, argv);
+parseline(buf3, argv);
 fp1 = fopen("rrshcommands.txt","r");
 if (argv[0] != NULL) {
 	printf("User %s sent the command '%s' to be executed.\n", buf, buf3);
@@ -81,8 +81,9 @@ if (argv[0] != NULL) {
     Close(connfd);
 	printf("%s",argv[0]);
 	 if (execve(argv[0], argv, environ) < 0) {
-		printf("%s: Command not found.\n", argv[0]);
-	//	exit(0);
+		printf("%s: Command not found.\n", argv[0]);	
+		//Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
+		exit(0);
 	    }  
   } else {
   }

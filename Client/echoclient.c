@@ -52,6 +52,10 @@ printf("rrsh > ");
 	{
 //	  Fputs(buf3, stdout);
 	}
+	else if (strcmp("RRSH COMMAND COMPLETED\n",buf3) ==0)
+         {
+               
+         }
 	else
 	{
 	while ((Rio_readlineb(&rio, buf3, MAXLINE))!=0)
