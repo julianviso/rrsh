@@ -26,8 +26,6 @@ int main(int argc, char **argv)
 	Fgets(buf, MAXLINE, stdin);
 	Rio_writen(clientfd, buf, strlen(buf));
 	Rio_readlineb(&rio, buf, MAXLINE);
-//	Fputs(buf, stdout);
-
 	printf("Password: ");
         Fgets(buf2, MAXLINE, stdin);
 	Rio_writen(clientfd, buf2, strlen(buf2));
@@ -39,14 +37,17 @@ int main(int argc, char **argv)
 	{
 		exit(0);
 	}
-/*i	if (strcmp("Yes\n",buf2)==0)
-	{
-	printf("YESSS\n");
-	}*/
-//	int n;
+	printf("rrsh > ");
     while (Fgets(buf3, MAXLINE, stdin) != NULL) {
 	Rio_writen(clientfd, buf3, strlen(buf3));
-//	Rio_readlineb(&rio, buf3, MAXLINE);
+	Rio_readlineb(&rio, buf3, MAXLINE);
+	printf("rrsh > " );
+	if ((strcmp("Cannot execute program on this server\n",buf3) == 0))
+	{
+	  Fputs(buf3, stdout);
+	}
+	else
+	{
 	while ((Rio_readlineb(&rio, buf3, MAXLINE))!=0)
 	{
 	 
@@ -55,6 +56,7 @@ int main(int argc, char **argv)
 	 {
 		break;
 	 }
+	}
 	}
 	Fputs(buf3, stdout);
     }
