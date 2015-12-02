@@ -1,0 +1,20 @@
+Julian Viso
+Ashir Amin
+
+
+Overview:
+In this project we have a server and client running where the client sends a message to the server, the server reads the message and then sends back an echo to the client. We broke up the project into two parts: the server and client.
+
+
+Client Overview:
+The client when started up prompts the user for a username and password. The login information that the user enters is then read by the server for authentication. If the login info is incorrect then it sends to the screen a message saying that the login was incorrect and then calls exit(0) to quit the client.
+
+After logging in correctly, the client works similar to any other shell, it waits for the user to enter a command and then sends the command the user typed into the server. If the user types quit it exits the client shell. 
+
+
+Server Overview:
+The majority of the server is implemented in echo.c in the echo() function. 
+
+At the start of the function it calls the authUser() function to open the rrshusers.txt and check if what the client sent for the username/password is the same as any of the usernames/passwords in the rrshusers.txt file with strcmp. The function returns 1 (true) if the username/password that the client sent is matched with one rrshusers.txt. 
+
+After doing authentication we call the parseline function from the UPSH program, open the rrshcommands.txt file, and check for what the client sends as a command. We check that the command sent by the client is not blank (null) and then get one word from the rrshcommands file. We use strcmp to check if the word that we got from rrshcommands and the argument sent by the client match, and set a variable 'allowed' to 1 (true) if the command matches. We then close the rrshcommands.txt file and have an if condition based on whether or not our allowed variable returned true or false. If our variable remained 0 (false) then the server prints out that the command entered by the client was not allowed and sends the error back to the client. If we did get a match however then we call fork, use dup2, and then close the file descriptor. 
