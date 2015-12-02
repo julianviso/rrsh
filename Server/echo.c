@@ -79,9 +79,12 @@ if (argv[0] != NULL) {
 	printf("Forking/Execing the command ’%s’ on behalf of %s.\n", buf3, buf);	
     dup2 (connfd, 1);
     Close(connfd);
-	printf("%s",argv[0]);
+//	printf("%s",argv[0]);
 	 if (execve(argv[0], argv, environ) < 0) {
-		printf("%s: Command not found.\n", argv[0]);	
+//		printf("%s: Command not found.\n", argv[0]);
+		char error[MAXLINE];
+		sprintf(error,"%s: Command not found.\n",argv[0]);
+		//Rio_writen(connfd,error,strlen(error));	
 		//Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
 		exit(0);
 	    }  
@@ -89,6 +92,7 @@ if (argv[0] != NULL) {
   }
 //	printf("%s sdfsdf\n",argv[1]);
 	waitpid(pid, &status, 0);
+	printf("%s this ",stderr);
             Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
 	
 }
@@ -137,12 +141,14 @@ int authUser(char * buf, char * buf2)
     char c;
  fp1 = fopen("rrshusers.txt","r");
         int auth = 0;
+	buf[strlen(buf)-1] = '\0';
+	buf2[strlen(buf2)-1] = '\0';
    do {
       c = fscanf(fp1,"%s",oneword); /* got one word from the file */
-        if (strcmp(oneword,strtok(buf,"\n"))==0)
+        if (strcmp(oneword,buf)==0)
         {
                 c = fscanf(fp1,"%s",oneword);
-                if (strcmp(oneword,strtok(buf2,"\n"))==0)
+                if (strcmp(oneword,buf2)==0)
                 {
                 //   Rio_writen(connfd,"Login Approved\n",15);
                    auth = 1;
