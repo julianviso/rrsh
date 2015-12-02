@@ -1,2 +1,0 @@
-# rrsh
-restricted remote shell
