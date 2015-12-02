@@ -6,6 +6,7 @@
 #include "csapp.h"
 #define MAX_USR_PASS 42
 #define MAXARGS   128
+#include <errno.h>
 extern char **environ;
 int parseline(char *buf, char **argv);
 int authUser(char * buf, char * buf2);
@@ -68,7 +69,9 @@ if (argv[0] != NULL) {
 		printf("The command '%s' is not allowed.\n", buf3);
 //                    dup2(connfd, 1);
                     printf("Cannot execute ’%s’ on this server\n", buf3);
-                Rio_writen(connfd,"Cannot execute program on this server\n",strlen("Cannot execute program on this server\n"));
+		    char error[MAXLINE];
+              sprintf(error,"Cannot execute 'program' on this server\n");
+                Rio_writen(connfd,error,strlen(error));
         }
 	else
 	{
@@ -82,8 +85,8 @@ if (argv[0] != NULL) {
 //	printf("%s",argv[0]);
 	 if (execve(argv[0], argv, environ) < 0) {
 //		printf("%s: Command not found.\n", argv[0]);
-		char error[MAXLINE];
-		sprintf(error,"%s: Command not found.\n",argv[0]);
+//		char error[MAXLINE];
+//		sprintf(error,"%s: Command not found.\n",argv[0]);
 		//Rio_writen(connfd,error,strlen(error));	
 		//Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
 		exit(0);
@@ -91,8 +94,9 @@ if (argv[0] != NULL) {
   } else {
   }
 //	printf("%s sdfsdf\n",argv[1]);
+//	printf ("Error opening file unexist.ent: %s\n",strerror(errno));
 	waitpid(pid, &status, 0);
-	printf("%s this ",stderr);
+//	printf("%s this ",stderr);
             Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
 	
 }

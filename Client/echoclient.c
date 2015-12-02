@@ -48,7 +48,7 @@ printf("rrsh > ");
 	Rio_readlineb(&rio, buf3, MAXLINE);
 	Fputs(buf3, stdout);
 	//printf("rrsh > " );
-	if ((strcmp("Cannot execute program on this server\n",buf3) == 0))
+	if ((strcmp("Cannot execute 'program' on this server\n",buf3) == 0))
 	{
 //	  Fputs(buf3, stdout);
 	}
