@@ -1,16 +1,16 @@
 /*
  * echoclient.c - An echo client
- */
-/* $begin echoclientmain */
+ *:%i:/
+* $begin echoclientmain */
 #include "csapp.h"
 
 int main(int argc, char **argv) 
 {
     int clientfd, port;
-    char *host, buf[MAXLINE];
+    char *host, username[MAXLINE];
     rio_t rio;
-    char buf2[MAXLINE];
-    char buf3[MAXLINE];
+    char password[MAXLINE];
+    char inputString[MAXLINE];
     if (argc != 3) {
 	fprintf(stderr, "usage: %s <host> <port>\n", argv[0]);
 	exit(0);
@@ -21,57 +21,50 @@ int main(int argc, char **argv)
 
     clientfd = Open_clientfd(host, port);
     Rio_readinitb(&rio, clientfd);
-    int auth = 0;
 	printf("UserName: ");
-	Fgets(buf, MAXLINE, stdin);
-	Rio_writen(clientfd, buf, strlen(buf));
-	Rio_readlineb(&rio, buf, MAXLINE);
+	Fgets(username, MAXLINE, stdin);
+	Rio_writen(clientfd, username, strlen(username));
+	Rio_readlineb(&rio, username, MAXLINE);
 	printf("Password: ");
-        Fgets(buf2, MAXLINE, stdin);
-	Rio_writen(clientfd, buf2, strlen(buf2));
-//	Fputs(buf, stdout);
-	Rio_readlineb(&rio, buf2, MAXLINE);
+        Fgets(password, MAXLINE, stdin);
+	Rio_writen(clientfd, password, strlen(password));
+	Rio_readlineb(&rio, password, MAXLINE);
 	
-    	Fputs(buf2, stdout);
-	if (strcmp("Login Failed\n",buf2)==0)
+    	Fputs(password, stdout);
+	if (strcmp("Login Failed\n",password)==0)
 	{
 		exit(0);
 	}
-printf("rrsh > ");
-    while (Fgets(buf3, MAXLINE, stdin) != NULL) {
-	if ((strcmp("quit\n",buf3) == 0))
+	printf("rrsh > ");
+    while (Fgets(inputString, MAXLINE, stdin) != NULL) {
+	if ((strcmp("quit\n",inputString) == 0))
         {
 	  exit(0);
-//        Fputs(buf3, stdout);
         }
-	Rio_writen(clientfd, buf3, strlen(buf3));
-	Rio_readlineb(&rio, buf3, MAXLINE);
-	Fputs(buf3, stdout);
-	//printf("rrsh > " );
-	if ((strcmp("Cannot execute 'program' on this server\n",buf3) == 0))
+	Rio_writen(clientfd, inputString, strlen(inputString));
+	Rio_readlineb(&rio, inputString, MAXLINE);
+	Fputs(inputString, stdout);
+	if ((strcmp("Cannot execute 'program' on this server\n",inputString) == 0))
 	{
-//	  Fputs(buf3, stdout);
 	}
-	else if (strcmp("RRSH COMMAND COMPLETED\n",buf3) ==0)
+	else if (strcmp("RRSH COMMAND COMPLETED\n",inputString) ==0)
          {
                
          }
 	else
 	{
-	while ((Rio_readlineb(&rio, buf3, MAXLINE))!=0)
+	while ((Rio_readlineb(&rio, inputString, MAXLINE))!=0)
 	{
 	 
-	 Fputs(buf3, stdout);
-	 if (strcmp("RRSH COMMAND COMPLETED\n",buf3) ==0)
+	 Fputs(inputString, stdout);
+	 if (strcmp("RRSH COMMAND COMPLETED\n",inputString) ==0)
 	 {
 		break;
 	 }
 	}
 	}
 	printf("rrsh > ");
-//	Fputs(buf3, stdout);
     }
     Close(clientfd); //line:netp:echoclient:close
     exit(0);
 }
-/* $end echoclientmain */
