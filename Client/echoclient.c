@@ -52,10 +52,11 @@ int main(int argc, char **argv)
 	*/
 	Rio_writen(clientfd, inputString, strlen(inputString));
 	Rio_readlineb(&rio, inputString, MAXLINE);
-	Fputs(inputString, stdout);
+	//Fputs(inputString, stdout);
 	strncpy(tmp3,inputString,strlen("Cannot execute"));
 	if ((strcmp(tmp3,"Cannot execute") == 0))
 	{
+		Fputs(inputString, stdout);
 		strcpy(tmp,"");
 	}
 	else if (strcmp("RRSH COMMAND COMPLETED\n",inputString) ==0)
@@ -67,10 +68,14 @@ int main(int argc, char **argv)
 	while ((Rio_readlineb(&rio, inputString, MAXLINE))!=0)
 	{
 	 
-	 Fputs(inputString, stdout);
+	// Fputs(inputString, stdout);
 	 if (strcmp("RRSH COMMAND COMPLETED\n",inputString) ==0)
 	 {
 		break;
+	 }
+	else 
+	 {
+		Fputs(inputString, stdout);
 	 }
 
 	}

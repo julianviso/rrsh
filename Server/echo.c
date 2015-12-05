@@ -39,13 +39,7 @@ void echo(int connfd,unsigned short client_port,char * haddrp)
 	}
 
 
-
-
-
-
-
     while((n = Rio_readlineb(&rio, inputString, MAXLINE)) != 0) { //line:netp:echo:eof
-	printf("server received %d bytes\n", (int)n);
 int allowed = 0;
 parseline(inputString, argv);
 fp1 = fopen("rrshcommands.txt","r");
