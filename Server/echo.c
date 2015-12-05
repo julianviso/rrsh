@@ -25,6 +25,9 @@ void echo(int connfd,unsigned short client_port,char * haddrp)
 	Rio_readlineb(&rio, username, MAXLINE);
 	Rio_writen(connfd,"Yes\n",4);
 	Rio_readlineb(&rio, password, MAXLINE);
+	username[strlen(username)-1] = '\0';
+
+        password[strlen(password)-1] = '\0';
 	printf("User %s logging in from %s at TCP port %u.\n", username, haddrp, client_port);
 	int auth = authUser(username,password);
 	if (auth == 0 )
@@ -127,9 +130,6 @@ int authUser(char * username, char * password)
     char c;
  fp1 = fopen("rrshusers.txt","r");
         int auth = 0;
-	username[strlen(username)-1] = '\0';
-		
-	password[strlen(password)-1] = '\0';
    do {
       c = fscanf(fp1,"%s",oneword);
         if (strcmp(oneword,username)==0)
