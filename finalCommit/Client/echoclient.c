@@ -11,6 +11,9 @@ int main(int argc, char **argv)
     rio_t rio;
     char password[MAXLINE];
     char inputString[MAXLINE];
+    char tmp[MAXLINE];
+//    char tmp2[MAXLINE];
+    char tmp3[strlen("Cannot execute ")];
     if (argc != 3) {
 	fprintf(stderr, "usage: %s <host> <port>\n", argv[0]);
 	exit(0);
@@ -41,11 +44,20 @@ int main(int argc, char **argv)
         {
 	  exit(0);
         }
+	/*strcpy(tmp2,inputString);
+	tmp2[strlen(tmp2)-1] = '\0';
+	strcat(tmp,"Cannot execute '");
+	strcat(tmp,tmp2);
+	strcat(tmp,"' on this server\n");
+	*/
 	Rio_writen(clientfd, inputString, strlen(inputString));
 	Rio_readlineb(&rio, inputString, MAXLINE);
-	Fputs(inputString, stdout);
-	if ((strcmp("Cannot execute 'program' on this server\n",inputString) == 0))
+	//Fputs(inputString, stdout);
+	strncpy(tmp3,inputString,strlen("Cannot execute"));
+	if ((strcmp(tmp3,"Cannot execute") == 0))
 	{
+		Fputs(inputString, stdout);
+		strcpy(tmp,"");
 	}
 	else if (strcmp("RRSH COMMAND COMPLETED\n",inputString) ==0)
          {
@@ -56,11 +68,16 @@ int main(int argc, char **argv)
 	while ((Rio_readlineb(&rio, inputString, MAXLINE))!=0)
 	{
 	 
-	 Fputs(inputString, stdout);
+	// Fputs(inputString, stdout);
 	 if (strcmp("RRSH COMMAND COMPLETED\n",inputString) ==0)
 	 {
 		break;
 	 }
+	else 
+	 {
+		Fputs(inputString, stdout);
+	 }
+
 	}
 	}
 	printf("rrsh > ");
