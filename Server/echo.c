@@ -67,7 +67,7 @@ if (argv[0] != NULL) {
 		printf("The command '%s' is not allowed.\n", inputString);
                     printf("Cannot execute ’%s’ on this server\n", inputString);
 		    char error[MAXLINE];
-              sprintf(error,"Cannot execute 'program' on this server\n");
+              sprintf(error,"Cannot execute '%s' on this server\n",inputString);
                 Rio_writen(connfd,error,strlen(error));
         }
 	else
