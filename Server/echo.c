@@ -25,7 +25,6 @@ void echo(int connfd,unsigned short client_port,char * haddrp)
 	Rio_readlineb(&rio, username, MAXLINE);
 	Rio_writen(connfd,"Yes\n",4);
 	Rio_readlineb(&rio, password, MAXLINE);
-        //fp1 = fopen("rrshusers.txt","r");
 	printf("User %s logging in from %s at TCP port %u.\n", username, haddrp, client_port);
 	int auth = authUser(username,password);
 	if (auth == 0 )
@@ -53,21 +52,19 @@ fp1 = fopen("rrshcommands.txt","r");
 if (argv[0] != NULL) {
 	printf("User %s sent the command '%s' to be executed.\n", username, inputString);
    do {
-	//printf("%s",argv[0]);
       c = fscanf(fp1,"%s",oneword); /* got one word from the file */
         if (strcmp(oneword,argv[0])==0)
+
         {
 	     allowed = 1;
 		
         }
    } while (c != EOF);
 	}
-        //printf("%d\n",allowed);
 	fclose(fp1);
         if (allowed == 0)
         {
 		printf("The command '%s' is not allowed.\n", inputString);
-//                    dup2(connfd, 1);
                     printf("Cannot execute ’%s’ on this server\n", inputString);
 		    char error[MAXLINE];
               sprintf(error,"Cannot execute 'program' on this server\n");
@@ -82,21 +79,12 @@ if (argv[0] != NULL) {
 	printf("Forking/Execing the command ’%s’ on behalf of %s.\n", inputString, username);	
     dup2 (connfd, 1);
     Close(connfd);
-//	printf("%s",argv[0]);
 	 if (execve(argv[0], argv, environ) < 0) {
-//		printf("%s: Command not found.\n", argv[0]);
-//		char error[MAXLINE];
-//		sprintf(error,"%s: Command not found.\n",argv[0]);
-		//Rio_writen(connfd,error,strlen(error));	
-		//Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
 		exit(0);
 	    }  
   } else {
   }
-//	printf("%s sdfsdf\n",argv[1]);
-//	printf ("Error opening file unexist.ent: %s\n",strerror(errno));
 	waitpid(pid, &status, 0);
-//	printf("%s this ",stderr);
             Rio_writen(connfd, "RRSH COMMAND COMPLETED\n", strlen("RRSH COMMAND COMPLETED\n"));
 	
 }
@@ -150,29 +138,22 @@ int authUser(char * username, char * password)
 	password[strlen(password)-1] = '\0';
    do {
       c = fscanf(fp1,"%s",oneword);
-	printf("%s from file %s\n",oneword,username);		 /* got one word from the file */
         if (strcmp(oneword,username)==0)
         {
-		printf("FUCK\n");
                 c = fscanf(fp1,"%s",oneword);
-                if (strcmp(oneword,password)==0)
+                if ((strcmp(oneword,password)==0) && (c!=EOF))
                 {
-                //   Rio_writen(connfd,"Login Approved\n",15);
                    auth = 1;
 		   return auth;
                 }
                 else
               {
 		auth = 0;
-                //  Rio_writen(connfd,"Login Failed\n",13);
+		return auth;
                 }
         }
    } while (c != EOF);
            /* repeat until EOF           */
-        if (auth == 0)
-        {
-               // Rio_writen(connfd,"Login Failed\n",13);
-        }
     fclose(fp1);
 
 
